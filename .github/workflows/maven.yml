@@ -18,29 +18,28 @@ jobs:
   build:
     name: Build WAR and create and push docker image
     runs-on: ubuntu-latest
-
     steps:
-     - uses: actions/checkout@v4
-     - name: Set up JDK 17
-       uses: actions/setup-java@v4
-       with:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-     - name: Build with Maven
-       run: mvn -B package --file pom.xml
-     - name: Build the Docker image
-       id: build-docker-image
-       run: docker build . --file Dockerfile --tag ${{secrets.DOCKER_USERNAME}}/actions-demo:latest
-     - name: Login to DockerHub
-       id: docker-hub
-       env: 
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+    - name: Build the Docker image
+      id: build-docker-image
+      run: docker build . --file Dockerfile --tag ${{secrets.DOCKER_USERNAME}}/actions-demo:latest
+    - name: Login to DockerHub
+      id: docker-hub
+      env: 
          username: ${{secrets.DOCKER_USERNAME}}
          password: ${{secrets.DOCKER_PASSWORD}}
-       run: docker login -u $username -p $password
-     - name: Push Docker Image
-       id: docker-push
-       run: docker push ${{secrets.DOCKER_USERNAME}}/actions-demo:latest  
+      run: docker login -u $username -p $password
+    - name: Push Docker Image
+      id: docker-push
+      run: docker push ${{secrets.DOCKER_USERNAME}}/actions-demo:latest  
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
